@@ -6,50 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* Reset básico para mobile */
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background: linear-gradient(135deg, #ffb6c1 0%, #fff0f5 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            font-family: 'Dancing Script', cursive;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
-            width: 600px;
-            text-align: center;
-            position: relative;
-            margin: 15px;
-            overflow-wrap: break-word;
-        }
-
-        .hearthover {
-            animation: pulse 2s infinite;
-            font-size: 2.5rem;
-            margin: 1rem 0;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-        }
+        /* ... (mantenha todo o CSS anterior igual) ... */
 
         .text-animation {
             animation: typing 3s steps(40), blink-caret 0.75s step-end infinite;
@@ -59,29 +16,9 @@
             margin: 1rem 0;
             line-height: 1.5;
             min-height: 60px;
+            white-space: pre-wrap; /* Alteração importante */
         }
 
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        /* Otimizações para corações */
-        .heart {
-            position: absolute;
-            opacity: 0;
-            animation: float 6s infinite linear;
-            will-change: transform;
-            pointer-events: none;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0) rotate(45deg); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
-        }
-
-        /* Media Queries para mobile */
         @media (max-width: 480px) {
             .container {
                 padding: 1rem;
@@ -90,7 +27,7 @@
 
             .text-animation {
                 font-size: 2rem;
-                animation: none;
+                animation: mobile-typing 3s ease-in; /* Nova animação para mobile */
                 border-right: none;
                 white-space: normal;
             }
@@ -99,62 +36,34 @@
                 font-size: 3rem;
             }
 
-            @keyframes typing {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-        }
-
-        @media (max-width: 360px) {
-            .text-animation {
-                font-size: 1.5rem;
+            @keyframes mobile-typing {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="text-animation" id="message"></div>
-        <div class="hearthover">❤️</div>
-    </div>
+    <!-- ... (mantenha o HTML igual) ... -->
 
     <script>
         const frases = [/* Suas frases mantidas aqui */];
 
-        // Otimização de performance para mobile
         window.addEventListener('load', function() {
             const randomIndex = Math.floor(Math.random() * frases.length);
             const messageElement = document.getElementById('message');
             
-            // Animação suave de transição
-            messageElement.style.opacity = 0;
-            setTimeout(() => {
-                messageElement.textContent = frases[randomIndex];
-                messageElement.style.opacity = 1;
-            }, 500);
+            // Sistema de fallback para animações
+            messageElement.style.visibility = 'hidden';
+            messageElement.textContent = frases[randomIndex];
+            
+            // Força recálculo do layout para disparar animação
+            void messageElement.offsetWidth;
+            
+            messageElement.style.visibility = 'visible';
 
-            // Controle de performance para corações
-            let lastTime = 0;
-            const heartInterval = window.innerWidth < 768 ? 1500 : 1000;
-
-            setInterval(() => {
-                const now = Date.now();
-                if (now - lastTime >= 100) {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart';
-                    heart.textContent = '❤️';
-                    heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-                    document.body.appendChild(heart);
-                    
-                    setTimeout(() => heart.remove(), 6000);
-                    lastTime = now;
-                }
-            }, heartInterval);
+            // ... (mantenha o resto do script igual) ...
         });
-
-        // Previne zoom em double-tap
-        document.addEventListener('dblclick', (e) => e.preventDefault());
     </script>
 </body>
 </html>
